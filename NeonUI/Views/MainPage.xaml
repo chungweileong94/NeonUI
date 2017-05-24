@@ -11,64 +11,117 @@
 
     <Page.Resources>
         <Style x:Key="NavRadioButtonStyle" TargetType="RadioButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="WhiteSmoke"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{ThemeResource RadioButtonBackground}"/>
+            <Setter Property="Foreground" Value="{ThemeResource RadioButtonForeground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
             <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-7,-3,-7,-3"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Grid Height="48" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                        <Grid x:Name="RootGrid" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal"/>
-                                    <VisualState x:Name="PointerOver"/>
-                                    <VisualState x:Name="Pressed"/>
-                                    <VisualState x:Name="Disabled"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemBackgroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemBackgroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="CheckStates">
                                     <VisualState x:Name="Checked">
-                                        <VisualState.Setters>
-                                            <Setter Target="border.(UIElement.Visibility)" Value="Visible"/>
-                                            <Setter Target="icon.(UIElement.Foreground)" Value="white"/>
-                                            <Setter Target="ContentPresenter.(UIElement.Foreground)" Value="white"/>
-                                        </VisualState.Setters>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="checker" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Unchecked"/>
                                     <VisualState x:Name="Indeterminate"/>
                                 </VisualStateGroup>
+
+                                <VisualStateGroup x:Name="VisualStateGroup">
+                                    <VisualState x:Name="VisualState_Wide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800"/>
+                                        </VisualState.StateTriggers>
+                                    </VisualState>
+                                    <VisualState x:Name="VisualState_Normal">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600"/>
+                                        </VisualState.StateTriggers>
+                                    </VisualState>
+                                    <VisualState x:Name="VisualState_Narrow">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0"/>
+                                        </VisualState.StateTriggers>
+                                    </VisualState>
+                                </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
 
-                            <Grid x:Name="grid">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                            <Border x:Name="B" Grid.ColumnSpan="2" BorderThickness="1">
+                                <Border.BorderBrush>
+                                    <brushes:HostBlurBrush BlurAmount="10" effects:PointLightEffect.IsTarget="True" effects:AmbientLightEffect.IsTarget="True"/>
+                                </Border.BorderBrush>
+                            </Border>
 
-                                <Border x:Name="border" Width="5" Margin="0,8" Background="White" HorizontalAlignment="Left" Visibility="Collapsed"/>
-                                <TextBlock x:Name="icon" Text="{TemplateBinding Tag}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="16,0,0,0" TextWrapping="Wrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <Grid Width="48" Height="48">
+                                <Border 
+                                    x:Name="checker"
+                                    Background="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                    Width="4"
+                                    Margin="0,8"
+                                    HorizontalAlignment="Left"
+                                    Visibility="Collapsed"/>
+
+                                <TextBlock 
+                                    x:Name="icon"
+                                    Text="{TemplateBinding Tag}" 
+                                    FontFamily="Segoe MDL2 Assets"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
                             </Grid>
+                            <ContentPresenter
+                                x:Name="ContentPresenter" 
+                                AutomationProperties.AccessibilityView="Raw" 
+                                ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                Content="{TemplateBinding Content}" 
+                                Grid.Column="1" 
+                                Foreground="{TemplateBinding Foreground}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                TextWrapping="Wrap" 
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="SeperatorBorderStyle" TargetType="Border">
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="Opacity" Value=".3"/>
-            <Setter Property="Margin" Value="64,0,120,0"/>
-        </Style>
     </Page.Resources>
 
     <Page.Lights>
         <effects:PointLightEffect/>
+        <effects:AmbientLightEffect/>
     </Page.Lights>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -116,8 +169,7 @@
             <SplitView 
                 x:Name="MainSplitView"
                 DisplayMode="CompactInline"
-                IsPaneOpen="True" 
-                PaneBackground="#FF1E1E1E">
+                IsPaneOpen="True">
 
                 <SplitView.Pane>
                     <Grid>
@@ -126,12 +178,12 @@
                         </Grid.Background>
                         <StackPanel 
                             x:Name="NavStackPanel"
-                            Padding="0,48,0,0">
+                            Padding="0,48,0,0" effects:PointLightEffect.IsTarget="True" effects:AmbientLightEffect.IsTarget="True">
 
                             <RadioButton Tag="&#xE10F;" Content="Home" Style="{StaticResource NavRadioButtonStyle}" Checked="NavRadioButton_Checked"/>
-                            <Border Style="{ThemeResource SeperatorBorderStyle}" effects:PointLightEffect.IsTarget="True"/>
+
                             <RadioButton Tag="&#xE1CE;" Content="Favorite" Style="{StaticResource NavRadioButtonStyle}" Checked="NavRadioButton_Checked"/>
-                            <Border Style="{ThemeResource SeperatorBorderStyle}" effects:PointLightEffect.IsTarget="True"/>
+
                             <RadioButton Tag="&#xE11B;" Content="Help" Style="{StaticResource NavRadioButtonStyle}" Checked="NavRadioButton_Checked"/>
                         </StackPanel>
                     </Grid>

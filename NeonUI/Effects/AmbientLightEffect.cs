@@ -1,19 +1,18 @@
 ﻿using System;
-using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace NeonUI.Effects
 {
-    public class PointLightEffect : XamlLight
+    public class AmbientLightEffect : XamlLight
     {
         // Register an attached proeprty that enables apps to set a UIElement or Brush as a target for this light type in markup.
         public static readonly DependencyProperty IsTargetProperty =
             DependencyProperty.RegisterAttached(
             "IsTarget",
             typeof(Boolean),
-            typeof(PointLightEffect),
+            typeof(AmbientLightEffect),
             new PropertyMetadata(null, OnIsTargetChanged)
         );
         public static void SetIsTarget(DependencyObject target, Boolean value)
@@ -58,14 +57,7 @@ namespace NeonUI.Effects
         protected override void OnConnected(UIElement newElement)
         {
             // OnConnected is called when the first target UIElement is shown on the screen. This enables delaying composition object creation until it's actually necessary.
-            CompositionLight = Window.Current.Compositor.CreatePointLight();
-            ((PointLight)CompositionLight).Color = Colors.White;
-
-            newElement.PointerMoved += (s, e) =>
-            {
-                var pos = e.GetCurrentPoint(newElement).Position;
-                ((PointLight)CompositionLight).Offset = new System.Numerics.Vector3((float)pos.X, (float)pos.Y, 40);
-            };
+            CompositionLight = Window.Current.Compositor.CreateAmbientLight();
         }
 
         protected override void OnDisconnected(UIElement oldElement)
@@ -83,7 +75,7 @@ namespace NeonUI.Effects
         private static string GetIdStatic()
         {
             // This specifies the unique name of the light. In most cases you should use the type's FullName.
-            return typeof(PointLightEffect).FullName;
+            return typeof(AmbientLightEffect).FullName;
         }
     }
 }

@@ -55,8 +55,8 @@ namespace NeonUI.Brushes
                 Source = new ArithmeticCompositeEffect()
                 {
                     MultiplyAmount = 0,
-                    Source1Amount = .4f,
-                    Source2Amount = .6f,
+                    Source1Amount = .3f,
+                    Source2Amount = .7f,
                     Source1 = new CompositionEffectSourceParameter("backdrop"),
                     Source2 = new ColorSourceEffect()
                     {

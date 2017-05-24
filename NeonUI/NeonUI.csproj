@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Brushes\HostBlurBrush.cs" />
+    <Compile Include="Effects\AmbientLightEffect.cs" />
     <Compile Include="Effects\PointLightEffect.cs" />
     <Compile Include="Extendsions\VisualTreeExtendsion.cs" />
     <Compile Include="Views\FavoritePage.xaml.cs">
